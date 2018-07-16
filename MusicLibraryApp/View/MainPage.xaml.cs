@@ -36,6 +36,7 @@ namespace MusicLibraryApp
             this.InitializeComponent();
             vm = new MainViewModel();
             vm.GetAllSongs();
+            //to display all songs
             this.DataContext = vm;
 
         }
