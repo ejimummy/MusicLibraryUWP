@@ -421,7 +421,7 @@ namespace MusicLibraryApp
         {
             
             //listViewArtists.Height = rootPivot.Height - 100;
-            if (rootPivot.SelectedIndex == 1)
+            if (rootPivot.SelectedIndex == 1) 
                 artistsCVS.Source = vm.Artists;
             if (rootPivot.SelectedIndex == 2)
                 albumsCVS.Source = vm.Albums;
@@ -431,15 +431,120 @@ namespace MusicLibraryApp
         private void PlaySongBtnInPivot_Click(object sender, RoutedEventArgs e)
         {
             //Add the code to play the Song selected in the ListView
+
         }
 
         private void AddToPlaylistBtnInPivot_Click(object sender, RoutedEventArgs e)
         {
             //Add the code to Add  the Song selected in the ListView to a PlayList
+            
         }
+
         #endregion
 
+        private async void listViewArtists_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Song songInContext = (Song)e.ClickedItem;
 
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile file = await localFolder.GetFileAsync(songInContext.SongFileName);
+            if (file != null)
+            {
+                //_mediaSource = MediaSource.CreateFromStorageFile(file);
+                //this.mediaPlayer.SetPlaybackSource(_mediaSource);
+                //this.mediaPlayer.AutoPlay = true;
+                IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+                MyMediaElement.SetSource(stream, file.ContentType);
+                //MyMediaElement.PosterSource = songInContext.CoverImage;
+            }
+            if (playing)
+            {
+                MyMediaElement.AutoPlay = false;
+                playing = false;
+            }
+            else
+            {
+                playing = true;
+                MyMediaElement.AutoPlay = true;
+                MediaElementImage.Source = songInContext.CoverImage;
+
+            }
+
+        }
+
+        private  async void listViewAlbum_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Song songInContext = (Song)e.ClickedItem;
+
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile file = await localFolder.GetFileAsync(songInContext.SongFileName);
+            if (file != null)
+            {
+                //_mediaSource = MediaSource.CreateFromStorageFile(file);
+                //this.mediaPlayer.SetPlaybackSource(_mediaSource);
+                //this.mediaPlayer.AutoPlay = true;
+                IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+                MyMediaElement.SetSource(stream, file.ContentType);
+                //MyMediaElement.PosterSource = songInContext.CoverImage;
+            }
+            if (playing)
+            {
+                MyMediaElement.AutoPlay = false;
+                playing = false;
+            }
+            else
+            {
+                playing = true;
+                MyMediaElement.AutoPlay = true;
+                MediaElementImage.Source = songInContext.CoverImage;
+
+            }
+
+        }
+
+        private async  void listViewAlbum_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (playing)
+            {
+                var count = e.AddedItems.Count;
+                if (count > 0)
+                {
+                    Song songInContext = (Song)e.AddedItems.ElementAt(count - 1);
+
+                    StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                    StorageFile file = await localFolder.GetFileAsync(songInContext.SongFileName);
+                    if (file != null)
+                    {
+                        IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+                        MyMediaElement.SetSource(stream, file.ContentType);
+                    }
+                    MyMediaElement.AutoPlay = true;
+                    MediaElementImage.Source = songInContext.CoverImage;
+                }
+            }
+        }
+
+        private  async void listViewArtists_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (playing)
+            {
+                var count = e.AddedItems.Count;
+                if (count > 0)
+                {
+                    Song songInContext = (Song)e.AddedItems.ElementAt(count - 1);
+
+                    StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                    StorageFile file = await localFolder.GetFileAsync(songInContext.SongFileName);
+                    if (file != null)
+                    {
+                        IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+                        MyMediaElement.SetSource(stream, file.ContentType);
+                    }
+                    MyMediaElement.AutoPlay = true;
+                    MediaElementImage.Source = songInContext.CoverImage;
+                }
+            }
+        }
     }
 }
 
